@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Random Video Redirect</title>
+    <script>
+        // Video URLs from Apple's public servers
+        const videos = [
+            'https://sylvan.apple.com/Videos/comp_A015_C018_0128ZS_v03_SDR_PS_FINAL_20180709__SDR_2K_AVC.mov',
+            'https://sylvan.apple.com/Videos/comp_A006_C003_1219EE_CC_v01_SDR_PS_FINAL_20180709_SDR_2K_AVC.mov',
+            'https://sylvan.apple.com/Videos/comp_A103_C002_0205DG_v12_SDR_PS_FINAL_20180709_SDR_2K_HEVC.mov',
+            'https://sylvan.apple.com/Videos/comp_GMT329_113NC_401K_PSNK_DENOISE_v04_SDR_PS_FINAL_20180709_SDR_2K_AVC.mov',
+            'https://sylvan.apple.com/Videos/comp_HK_H004_C010_PSNK_v05_SDR_PS_FINAL_20180709_SDR_2K_AVC.mov',
+            'https://sylvan.apple.com/Videos/comp_LA_A005_C009_PSNK_ALT_02_v09_SDR_PS_FINAL_20180709_SDR_2K_AVC.mov'
+        ];
+        
+        // Pick a random video and redirect
+        const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+        window.location.replace(randomVideo);
+    </script>
+</head>
+<body>
+    <p>Redirecting to random video...</p>
+</body>
+</html>

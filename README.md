@@ -15,7 +15,7 @@ A static video proxy for KDE Plasma's "Smart Video Wallpaper reborn" extension, 
 After deploying to GitHub Pages, use this URL in your KDE Plasma Smart Video Wallpaper:
 
 ```
-https://yourusername.github.io/VideoWallpaper_Proxy/video.html
+https://yourusername.github.io/VideoWallpaper_Proxy/video-feed.mov
 ```
 
 Each time KDE requests this URL, it will redirect to a different random video!
@@ -122,7 +122,8 @@ autoRotateInterval = setInterval(() => {
 
 ## 📄 Files
 
-- `video.html` - Random video redirect (use this URL for KDE Plasma)
+- `video-feed.mov` - Random video redirect with .mov extension (use this URL for KDE Plasma)
+- `video.html` - Alternative HTML version of the redirect
 - `index.html` - Web player with controls for browser viewing
 - `video-feed-server.js` - Optional local Node.js server (if you prefer running locally)
 - `LICENSE` - License information
@@ -137,7 +138,7 @@ autoRotateInterval = setInterval(() => {
 
 ## 📝 Notes
 
-- **For KDE Plasma**: Use `video.html` - it redirects to a random video each time it's loaded
+- **For KDE Plasma**: Use `video-feed.mov` - it has a .mov extension and redirects to a random video each time
 - **For Browser Viewing**: Use `index.html` - it has a full player with controls
 - Videos are streamed directly from Apple's servers
 - No video files are stored in this repository
