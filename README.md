@@ -1,77 +1,71 @@
-# Video Wallpaper Proxy
+# Video Wallpaper Proxy for KDE Plasma
 
-A static video proxy for KDE Plasma's "Smart Video Wallpaper reborn" extension, hosted on GitHub Pages. This project provides a simple URL that randomly serves Apple screensaver videos.
+A Node.js proxy server that provides a single URL endpoint for KDE Plasma's "Smart Video Wallpaper reborn" extension, which randomly serves beautiful Apple screensaver videos.
 
-## 🌟 Features
+## 🎯 The Problem & Solution
 
-- **Random Video Proxy** - Single URL that redirects to random videos
-- **Static Hosting** - No server required, works on GitHub Pages
-- **KDE Plasma Compatible** - Perfect for Smart Video Wallpaper reborn
-- **Web Player** - Beautiful interface for previewing videos in browser
-- **No Backend Required** - Pure client-side application
+**Problem**: KDE Plasma's Smart Video Wallpaper needs actual video URLs and doesn't execute JavaScript. GitHub Pages can't do server-side random selection.
 
-## 🚀 For KDE Plasma Users
+**Solution**: Run this Node.js server locally that provides `http://localhost:8080/video-feed.mov` - each request gets a random video!
 
-After deploying to GitHub Pages, use this URL in your KDE Plasma Smart Video Wallpaper:
+## 🚀 Quick Start
 
-```
-https://yourusername.github.io/VideoWallpaper_Proxy/video-feed.mov
+### 1. Start the Server
+
+```bash
+node video-feed-server.js
 ```
 
-Each time KDE requests this URL, it will redirect to a different random video!
+### 2. Configure KDE Plasma Smart Video Wallpaper
 
-## 📦 Hosting on GitHub Pages
-
-### Option 1: Enable GitHub Pages in Repository Settings
-
-1. Push this repository to GitHub
-2. Go to your repository settings
-3. Navigate to **Pages** section
-4. Under **Source**, select the branch (usually `main` or `master`)
-5. Select the root folder `/`
-6. Click **Save**
-7. Your site will be available at `https://yourusername.github.io/repository-name/`
-
-### Option 2: Using GitHub Actions (Automatic Deployment)
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+Use this URL in the wallpaper settings:
+```
+http://localhost:8080/video-feed.mov
 ```
 
-## 🎬 Video Sources
+Each time KDE requests this URL, it gets a random video from the pool!
 
-The application uses publicly available videos from Apple's servers:
+## 🔧 Run as System Service (Auto-start on Boot)
+
+### Install as User Service
+
+```bash
+# Create systemd user directory if it doesn't exist
+mkdir -p ~/.config/systemd/user
+
+# Copy service file
+cp video-wallpaper-proxy.service ~/.config/systemd/user/
+
+# Update the WorkingDirectory path in the service file to match your actual location
+nano ~/.config/systemd/user/video-wallpaper-proxy.service
+
+# Enable and start the service
+systemctl --user enable video-wallpaper-proxy.service
+systemctl --user start video-wallpaper-proxy.service
+
+# Check status
+systemctl --user status video-wallpaper-proxy.service
+```
+
+### Service Management Commands
+
+```bash
+# Start the service
+systemctl --user start video-wallpaper-proxy.service
+
+# Stop the service
+systemctl --user stop video-wallpaper-proxy.service
+
+# Restart the service
+systemctl --user restart video-wallpaper-proxy.service
+
+# Check logs
+journalctl --user -u video-wallpaper-proxy.service -f
+```
+
+## 🎬 Available Videos
+
+The server rotates through 6 beautiful Apple screensaver videos:
 - High-quality screensaver videos
 - Various scenic locations and subjects
 - Optimized for web streaming
@@ -83,77 +77,90 @@ Simply open `index.html` in your web browser. No build process or server require
 ```bash
 # Option 1: Open directly
 open index.html
+- Aerial scenes
+- Nature landscapes  
+- City views
+- Ocean scenes
 
-# Option 2: Use a simple HTTP server
-python3 -m http.server 8000
-# Then visit http://localhost:8000
-```
+## 🛠️ Customization
 
-## 📱 Usage
+### Add More Videos
 
-1. **Play Random Video** - Click the "Play Random Video" button
-2. **Navigate** - Use Next/Previous buttons to browse videos
-3. **Auto-Rotate** - Enable to automatically cycle through videos
-4. **Direct Selection** - Click any video in the list to play it immediately
-
-## 🔧 Customization
-
-### Adding More Videos
-
-Edit the `videos` array in `index.html`:
+Edit `video-feed-server.js` and add URLs to the `videos` array:
 
 ```javascript
 const videos = [
     'https://your-video-url-1.mov',
     'https://your-video-url-2.mov',
-    // Add more videos here
+    // Add more...
 ];
 ```
 
-### Changing Auto-Rotate Interval
+### Change Port
 
-Modify the interval in the `toggleAutoPlay()` function:
+Edit the `PORT` constant in `video-feed-server.js`:
 
 ```javascript
-autoRotateInterval = setInterval(() => {
-    playNextVideo();
-}, 30000); // Change 30000 to desired milliseconds
+const PORT = 8080; // Change to your preferred port
+```
+
+## 📋 Endpoints
+
+- `/video-feed.mov` - Random video proxy (use this for KDE Plasma)
+- `/playlist.m3u` - M3U playlist with all videos
+- `/` - Web interface with information
+
+## 🧪 Testing
+
+Test in your browser:
+```bash
+# Start the server
+node video-feed-server.js
+
+# Open in browser
+http://localhost:8080
 ```
 
 ## 📄 Files
 
-- `video-feed.mov` - Random video redirect with .mov extension (use this URL for KDE Plasma)
-- `video.html` - Alternative HTML version of the redirect
+- `video-feed-server.js` - ✅ **Node.js server (required for KDE Plasma)**
+- `video-wallpaper-proxy.service` - Systemd service file for auto-start
 - `index.html` - Web player with controls for browser viewing
-- `video-feed-server.js` - Optional local Node.js server (if you prefer running locally)
-- `LICENSE` - License information
-- `README.md` - This file
+- `video.html` - JavaScript redirect (doesn't work with KDE)
+- `playlist.m3u` - Playlist file with all video URLs
+- LICENSE - License information
+- README.md - This file
 
-## 🌐 Browser Compatibility
+## ❗ Why Not GitHub Pages?
 
-- ✅ Chrome/Edge (Recommended)
-- ✅ Firefox
-- ✅ Safari
-- ✅ Mobile browsers
+**GitHub Pages won't work** for KDE Plasma's video wallpaper because:
+- Static hosting can't execute server-side code
+- JavaScript redirects (`video.html`) don't work with KDE's video player
+- You need a real server to randomly select and serve videos
 
-## 📝 Notes
+The `index.html` and `video.html` files are included for browser viewing only.
 
-- **For KDE Plasma**: Use `video-feed.mov` - it has a .mov extension and redirects to a random video each time
-- **For Browser Viewing**: Use `index.html` - it has a full player with controls
-- Videos are streamed directly from Apple's servers
-- No video files are stored in this repository
-- Requires internet connection to load videos
-- Some corporate networks may block video streaming
-- KDE Plasma will cache the video, so you'll see the same one until the wallpaper refreshes
+## 🐛 Troubleshooting
 
-## 🎨 Original Project
+### Server won't start
+```bash
+# Check if port is already in use
+lsof -i :8080
 
-This is a static version converted from the Node.js proxy server application. The original server is preserved in `video-feed-server.js` for reference.
+# Kill process using the port
+kill -9 <PID>
+```
+
+### KDE Plasma can't connect
+- Make sure the server is running: `systemctl --user status video-wallpaper-proxy.service`
+- Test the URL in a browser first: `http://localhost:8080/video-feed.mov`
+- Verify Node.js is installed: `node --version`
+
+### Videos won't load
+- Check your internet connection
+- Verify Apple's CDN is accessible
+- Check server logs: `journalctl --user -u video-wallpaper-proxy.service`
 
 ## 📜 License
 
 See LICENSE file for details.
-
-## 🤝 Contributing
-
-Feel free to open issues or submit pull requests for improvements!

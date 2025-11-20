@@ -1,0 +1,14 @@
+[Unit]
+Description=Video Wallpaper Proxy Server
+After=network.target
+
+[Service]
+Type=simple
+User=%u
+WorkingDirectory=%h/.local/share/Trash/files/VideoWallpaper_Proxy
+ExecStart=/usr/bin/node video-feed-server.js
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=default.target

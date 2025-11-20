@@ -6,8 +6,8 @@ const url = require('url');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const videos = [
-    'https://sylvan.apple.com/Videos/comp_A015_C018_0128ZS_v03_SDR_PS_FINAL_20180709__SDR_2K_AVC.mov',
-    'https://sylvan.apple.com/Videos/comp_A006_C003_1219EE_CC_v01_SDR_PS_FINAL_20180709_SDR_2K_AVC.mov'
+    'http://sylvan.apple.com/Videos/comp_A015_C018_0128ZS_v03_SDR_PS_FINAL_20180709__SDR_2K_AVC.mov',
+    'http://sylvan.apple.com/Videos/comp_A006_C003_1219EE_CC_v01_SDR_PS_FINAL_20180709_SDR_2K_AVC.mov'
 ];
 
 const PORT = 8080;
@@ -23,7 +23,7 @@ const server = http.createServer((req, res) => {
         console.log(`Serving random video ${randomIndex + 1}: ${videoUrl}`);
         
         // Proxy the video directly
-        https.get(videoUrl, (videoRes) => {
+        http.get(videoUrl, (videoRes) => {
             res.writeHead(videoRes.statusCode, {
                 'Content-Type': 'video/quicktime',
                 'Content-Length': videoRes.headers['content-length'],
